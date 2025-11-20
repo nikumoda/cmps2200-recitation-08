@@ -12,8 +12,18 @@ def shortest_shortest_path(graph, source):
       a dict where each key is a vertex and the value is a tuple of
       (shortest path weight, shortest path number of edges). See test case for example.
     """
-    ### TODO
-    pass
+    # Dijkstra algorithm
+    heap = [(0, 0, source)]  # (weight, edges, node)
+    visited = {}
+    while heap:
+        weight, edges, node = heappop(heap)
+        if node in visited:
+            continue
+        visited[node] = (weight, edges)
+        for neighbor, w in graph.get(node, set()):
+            if neighbor not in visited:
+                heappush(heap, (weight + w, edges + 1, neighbor))
+    return visited
     
 
     
@@ -24,8 +34,18 @@ def bfs_path(graph, source):
       a dict where each key is a vertex and the value is the parent of 
       that vertex in the shortest path tree.
     """
-    ###TODO
-    pass
+    # BFS
+    parents = {}
+    visited = set([source])
+    queue = deque([source])
+    while queue:
+        node = queue.popleft()
+        for neighbor in graph.get(node, set()):
+            if neighbor not in visited:
+                parents[neighbor] = node
+                visited.add(neighbor)
+                queue.append(neighbor)
+    return parents
 
 def get_sample_graph():
      return {'s': {'a', 'b'},
@@ -43,6 +63,11 @@ def get_path(parents, destination):
       The shortest path from the source node to this destination node 
       (excluding the destination node itself). See test_get_path for an example.
     """
-    ###TODO
-    pass
+    # Reconstruct path
+    path = []
+    node = destination
+    while node in parents:
+        node = parents[node]
+        path.append(node)
+    return ''.join(reversed(path))
 
